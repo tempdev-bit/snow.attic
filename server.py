@@ -36,7 +36,22 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Allowed file extensions
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip', 'mp3', 'mp4', 'gba'}
+ALLOWED_EXTENSIONS = {
+    'txt', 
+    'pdf', 
+    'png', 
+    'jpg', 
+    'jpeg', 
+    'gif', 
+    'zip', 
+    'mp3', 
+    'wav', 
+    'gif', 
+    'pdf', 
+    'mp4', 
+    'mpv',
+    'gba'
+    }
 
 #Basic Auth setup
 auth = HTTPBasicAuth()
@@ -44,6 +59,13 @@ user = {
     os.getenv("SNOW_USERNAME"):
     generate_password_hash(os.getenv("SNOW_PASSWORD"))
     }
+
+USERNAME = os.getenv("SNOW_USERNAME")
+PASSWORD = os.getenv("SNOW_PASSWORD")
+
+if not USERNAME or not PASSWORD:
+    print(f"Missing SNOW_USERNAME or SNOW_PASSWORD in .env")
+
 
 #Check user creds
 @auth.verify_password
@@ -88,8 +110,8 @@ def download(filename):
     if not os.path.exists(path):
         print(f"Error")
         abort(404)
-        print(f"Downloading... {safe_name}")
     return send_from_directory(app.config['UPLOAD_FOLDER'], safe_name, as_attachment=True)
+    print(f"Downloading... {safe_name}")
 
 #Handle Delete
 @app.route('/delete/<filename>', methods=['POST'])
