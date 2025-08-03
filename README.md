@@ -1,9 +1,50 @@
-❄️ snow.attic — Secure, Minimal Flask File Server (with ngrok)
+# ❄️ snow.attic
 
-A lightweight file server built with Python and Flask, which will feature:
+A secure, minimalist file server built in Python using Flask.
 
-    🔐 Login-protected file sharing
-    📂 Upload / download / delete files
-    🧑‍🎨 Drag-and-drop ASCII web UI
-    🌐 Optional public URL via ngrok
-    🐍 Simple code, no database, fully explained
+## 🔐 Features
+
+- Password login (from .env)
+- Upload, download, and delete files
+- Drag-and-drop web interface
+- Optional public URL via ngrok
+
+## ⚙️ Setup
+
+```bash
+git clone https://github.com/yourusername/snow-attic.git
+cd snow-attic
+pip install -r req.txt
+```
+
+### Create .env:
+
+```
+SNOW_USERNAME=(UsernameHere)
+SNOW_PASSWORD=(PasswordHere)
+NGROK_AUTHTOKEN=(TokenHere)
+```
+Directly replace the brackets and text. For eg:
+
+```
+SNOW_USERNAME=Snow
+SNOW_PASSWORD=SuperSecurePassword12
+NGROK_AUTHTOKEN=ExampleToken12345678
+```
+
+### Run:
+
+```
+python server.py
+```
+
+## 📂 File Storage
+
+All files are saved in uploads/ on your local machine.
+
+🌍 Public Access (via ngrok)
+
+If NGROK_AUTHTOKEN is set, the server will print a public http URL you can share.
+
+
+<center><sup>Built with ❤️ by Solar<sup>
