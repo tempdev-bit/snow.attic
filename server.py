@@ -11,12 +11,12 @@ except ImportError as e:
     import traceback
     traceback.print_exc()
 else:
-    print(f"Passed Test 1!")
+    print(f"Imported all modules succesfully!")
 
 #Try to import pyngrok for public access; PURELY OPTIONAL
 try:
     from pyngrok import ngrok
-    print(f"Pyngrok Imported!")
+    print(f"Web access module imported!")
 except ImportError:
     ngrok = None
     print(f"Couldn't load ngrok; no web access")
@@ -46,20 +46,23 @@ user = {
 @auth.verify_password
 def verify_password(username, password):
     print(f"Authenticating user...")
-    if username in users and check_password_hash(users[username], password):
-        return username
+    if username in user and check_password_hash(user[username], password):
         print(f"User authenticated!")
+        return username
+    else:
+        print(f"User not authenticated! (Wrong username or password)")
+        return None
 
 #Validate safe file types
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit( '.', 1)[1].lower in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit( '.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Homepage
 @app.route('/')
 @auth.login_required
 def index():
     files = sorted(os.listdir(app.config['UPLOAD_FOLDER']))
-    return render_template('index.html', files=files) #TODO - index.html
+    return render_template('index.html', files=files)
 
 #Handle downloads
 @app.route('/download/<filename>')
@@ -70,6 +73,7 @@ def download(filename):
     if not os.path.exists(path):
         print(f"Error")
         abort(404)
+        print(f"Downloading... {safe_name}")
     return send_from_directory(app.config['UPLOAD_FOLDER'], safe_name, as_attachment=True)
 
 #Handle Delete
@@ -85,10 +89,26 @@ def delete(filename):
 if __name__ == '__main__':
     print(f"snow.attic running on http://127.0.0.1:500")
 
-    token = os.getenv("NGROK_AUTHTOKEN")
-    if ngrok and token:
-        ngrok.set_auth_token(token)
-        public_url = ngrok.connect(5000)
-        print(f"Pubblic URL for access from anywhere: {public_url}")
+if ngrok:
+    try:
+        token = os.getenv("NGROK_AUTHTOKEN")
+        if not token:
+            print("Ngrok token not found in .env")
+            return
 
-    app.run(debug=True)
+        ngrok.set_auth_token(token)
+
+        # Close existing tunnels
+        for tunnel in ngrok.get_tunnels():
+            print(f"Closing existing tunnel: {tunnel.public_url}")
+            ngrok.disconnect(tunnel.public_url)
+
+        # Open new tunnel
+        public_url = ngrok.connect(5000)
+        print(f"Public URL for access from anywhere: {public_url}")
+
+    except Exception as e:
+        print(f"Ngrok error: {e}")
+
+
+app.run(debug=True)
