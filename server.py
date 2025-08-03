@@ -61,3 +61,23 @@ def index():
     files = sorted(os.listdir(app.config['UPLOAD_FOLDER']))
     return render_template('index.html', files=files) #TODO - index.html
 
+#Handle downloads
+@app.route('/download/<filename>')
+@auth.login_required
+def download(filename):
+    safe_name = secure_filename(filename)
+    path = os.path.join(app.config['UPLOAD_FOLDER'])
+    if not os.path.exists(path):
+        print(f"Error")
+        abort(404)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], safe_name, as_attachment=True)
+
+#Handle Delete
+@app.route('/delete/<filename>', methods=['POST'])
+@auth.login_required
+def delete(filename):
+    safe_name = secure_filename(filename)
+    path = os.path.join(app.config['UPLOAD_FOLDER'], safe_name)
+    if os.path.exists(path):
+        os.remove(path)
+    return redirect(url_for('index'))
