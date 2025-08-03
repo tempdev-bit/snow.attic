@@ -14,6 +14,21 @@ else:
 #Try to import pyngrok for public access; PURELY OPTIONAL
 try:
     from pyngrok import ngrok
+    print(f"Pyngrok Imported!")
 except ImportError:
     ngrok = None
     print(f"Couldn't load ngrok; no web access")
+
+#Load from .env
+load_dotenv()
+
+#Flask setup
+app = Flask(__name__)
+
+#Uploaded files destination
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#Allowed file extensions
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip', 'mp3', 'mp4', 'gba'}
