@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>snow.attic</title>
+  <style>
+    body {
+      background: #0a0f1a; /* Dark navy blue */
+      color: #b3cde0;       /* Soft light blue text */
+      font-family: monospace;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    .ascii {
+      white-space: pre;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #8ab6d6; /* Soft blue */
+    }
+    .file {
+      margin: 10px 0;
+      border-bottom: 1px solid #1f2b3a;
+      padding-bottom: 5px;
+    }
+    .dropzone {
+      border: 2px dashed #3a6ea5;
+      background-color: #111a2b;
+      padding: 15px;
+      text-align: center;
+      margin: 20px 0;
+      color: #b3cde0;
+    }
+    a {
+      color: #77aadd;
+      text-decoration: none;
+    }
+    form {
+      display: inline;
+    }
+    input[type="file"],
+    input[type="submit"] {
+      background: #1a2636;
+      color: #cde;
+      border: 1px solid #3a6ea5;
+      padding: 5px;
+      margin-top: 5px;
+    }
+    input[type="submit"]:hover {
+      background: #2b3e55;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
 
+  <div class="ascii">
+   _____                                   _   _   _      
+  / ____|                             /\  | | | | (_)     
+ | (___  _ __   _____      __        /  \ | |_| |_ _  ___ 
+  \___ \| '_ \ / _ \ \ /\ / /       / /\ \| __| __| |/ __|
+  ____) | | | | (_) \ V  V /   _   / ____ \ |_| |_| | (__ 
+ |_____/|_| |_|\___/ \_/\_/   (_) /_/    \_\__|\__|_|\___|
+  </div>
+
+  <h1>welcome to snow.attic</h1>
+
+  <!-- Upload form -->
+  <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="files" multiple>
+    <input type="submit" value="Upload">
+  </form>
+
+  <div class="dropzone" id="dropzone">
+    Drag & drop files here to upload
+  </div>
+
+  <h2>📂 Files:</h2>
+  {% if files %}
+    {% for file in files %}
+      <div class="file">
+        <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
+        <form action="{{ url_for('delete', filename=file) }}" method="POST">
+          <input type="submit" value="Delete">
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No files uploaded yet.</p>
+  {% endif %}
+
+  <script>
+    const dz = document.getElementById('dropzone');
+    const input = document.querySelector('input[type="file"]');
+
+    dz.addEventListener('dragover', e => {
+      e.preventDefault();
+      dz.style.background = '#1a2636';
+    });
+
+    dz.addEventListener('dragleave', e => {
+      e.preventDefault();
+      dz.style.background = '#111a2b';
+    });
+
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.style.background = '#111a2b';
+      input.files = e.dataTransfer.files;
+      document.getElementById('upload-form').submit();
+    });
+  </script>
+</body>
+</html>
