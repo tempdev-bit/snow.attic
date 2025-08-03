@@ -2,10 +2,13 @@ try:
     import sys
     from flask import Flask, render_template, request, redirect, url_for, send_from_directory, abort
     from flask_httpauth import HTTPBasicAuth
+    from pyngrok.exception import PyngrokNgrokError
+    from pyngrok import conf, process
     from werkzeug.security import generate_password_hash, check_password_hash
     from werkzeug.utils import secure_filename
     from dotenv import load_dotenv
     import os
+    import subprocess
 except ImportError as e:
     print("Test 1 failed: Import error: {e}")
     import traceback
@@ -64,6 +67,18 @@ def index():
     files = sorted(os.listdir(app.config['UPLOAD_FOLDER']))
     return render_template('index.html', files=files)
 
+#Upload
+@app.route('/upload', methods=['POST'])
+@auth.login_required
+def upload():
+    if 'file' not in request.files:
+        return redirect(url_for('index'))
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return redirect(url_for('index'))
+
 #Handle downloads
 @app.route('/download/<filename>')
 @auth.login_required
@@ -86,29 +101,32 @@ def delete(filename):
         os.remove(path)
     return redirect(url_for('index'))
 
+
+#I hate Ngrok
+#I wasted 1.5 hrs setting it up, and the names it generated are not efficient to tell
+#It is still the easiest one there, sooooo enjoy Ngrok
 if __name__ == '__main__':
-    print(f"snow.attic running on http://127.0.0.1:500")
+    print(f"snow.attic running...")
 
-if ngrok:
-    try:
-        token = os.getenv("NGROK_AUTHTOKEN")
-        if not token:
-            print("Ngrok token not found in .env")
-            return
+    if ngrok:
+        try:
+            token = os.getenv("NGROK_AUTHTOKEN")
+            if token:
+                ngrok.set_auth_token(token)
+                public_url = ngrok.connect(5000)
+                print(f"🌍 Public URL: {public_url}")
+            else:
+                print("No NGROK_AUTHTOKEN in .env — skipping tunnel.")
+        except Exception as e:
+            print(f"Ngrok error: {e}")
 
-        ngrok.set_auth_token(token)
+    app.run(debug=False)
 
-        # Close existing tunnels
-        for tunnel in ngrok.get_tunnels():
-            print(f"Closing existing tunnel: {tunnel.public_url}")
-            ngrok.disconnect(tunnel.public_url)
-
-        # Open new tunnel
-        public_url = ngrok.connect(5000)
-        print(f"Public URL for access from anywhere: {public_url}")
-
-    except Exception as e:
-        print(f"Ngrok error: {e}")
-
-
-app.run(debug=True)
+#TRIES to remove Ngrok headers
+#This doesn't work if you type the domain out
+#This is a jank implemetation only to remove the headers from 
+#the device this script is running in
+@app.after_request
+def skip_ngrok_warning(response):
+    response.headers["ngrok-skip-browser-warning"] = "true"
+    return response
