@@ -81,3 +81,14 @@ def delete(filename):
     if os.path.exists(path):
         os.remove(path)
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    print(f"snow.attic running on http://127.0.0.1:500")
+
+    token = os.getenv("NGROK_AUTHTOKEN")
+    if ngrok and token:
+        ngrok.set_auth_token(token)
+        public_url = ngrok.connect(5000)
+        print(f"Pubblic URL for access from anywhere: {public_url}")
+
+    app.run(debug=True)
