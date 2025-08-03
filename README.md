@@ -89,6 +89,5 @@ Click on the link produced by NGROK
   
   
 
-<center><sup>Built with ❤️ by Solar<sup>
-
+<center><sup>Built with ❤️ by Solar<sup><center>
 
