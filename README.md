@@ -1,7 +1,6 @@
 # ❄️ snow.attic
 
   
-
 A minimalist file server built in Python using Flask.
 
 ![snow.attic demo](image.png)
@@ -9,7 +8,6 @@ A minimalist file server built in Python using Flask.
 ## 🔐 Features
 
   
-
 - Password login (stored in .env)
 
 - Upload, download, and delete files for anywhere in the world (NGROK)
@@ -32,7 +30,7 @@ git  clone  https://github.com/yourusername/snow-attic.git
 
 cd  snow-attic
 
-pip  install  -r  req.txt
+sudo  apt  install  -r  req.txt 
 
 ```
   
