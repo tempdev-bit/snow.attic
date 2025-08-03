@@ -4,7 +4,7 @@
 
 A minimalist file server built in Python using Flask.
 
-  
+[![snow.attic demo](image.png)]
 
 ## 🔐 Features
 
