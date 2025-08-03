@@ -26,7 +26,7 @@ A minimalist file server built in Python using Flask.
 
 ```bash
 
-git  clone  https://github.com/yourusername/snow-attic.git
+git  clone  https://github.com/tempdev-bit/snow-attic.git
 
 cd  snow-attic
 
