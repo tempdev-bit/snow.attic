@@ -61,8 +61,7 @@ A minimalist file server built in Python using Flask.
   ```env
   SNOW_USERNAME=your_username
   SNOW_PASSWORD=your_password
-
-
+  ```
 ---
 
 ### 📁 File Upload & Management
@@ -113,11 +112,11 @@ A minimalist file server built in Python using Flask.
 
 ### Should Work On:
 
-    Ubuntu/Debian based distro (via apt)
+  - Ubuntu/Debian based distro (via apt)
 
-    Fedora/RHEL based distro (via dnf)
+  - Fedora/RHEL based distro (via dnf)
 
-    Arch Linux based distro (via pacman)
+  - Arch Linux based distro (via pacman)
 
 ### Setup Guide:
 
