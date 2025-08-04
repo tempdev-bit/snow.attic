@@ -39,11 +39,9 @@ If you want to run it later:
 cd snow.attic-main
 source venv/bin/activate
 python3 server.py
-
 ```
-Click on the link produced by NGROK
 
-  
+Click on the link produced by NGROK
 
 ## GENERAL
 
