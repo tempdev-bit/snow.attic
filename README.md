@@ -22,55 +22,22 @@ A minimalist file server built in Python using Flask.
 
 ## ⚙️ Setup
 
-  
+Get NGROK token from https://dashboard.ngrok.com/signup
 
 ```bash
-
-git  clone  https://github.com/tempdev-bit/snow-attic.git
-
-cd  snow-attic
-
-sudo  apt  install  -r  req.txt 
-
+wget https://github.com/tempdev-bit/snow.attic/archive/refs/heads/main.zip -O snow-attic.zip
+unzip snow-attic.zip
+cd snow.attic-main
+chmod +x setup_script.sh
+./setup_script.sh
 ```
   
-
-### Create .env:
-
-  
+After running setup_script it will automaticallly ask you if you want to run the server.
+If you want to run it later:
 
 ```
-
-SNOW_USERNAME=(UsernameHere)
-
-SNOW_PASSWORD=(PasswordHere)
-
-NGROK_AUTHTOKEN=(TokenHere)
-
-```
-
-Directly replace the brackets and text. For eg:
-
-  
-
-```
-
-SNOW_USERNAME=Snow
-
-SNOW_PASSWORD=SuperSecurePassword12
-
-NGROK_AUTHTOKEN=ExampleToken12345678
-
-```
-<sup> Get NGROK token from https://dashboard.ngrok.com/signup <sup>
-  
-
-### Run:
-
-  
-
-```
-
+cd snow.attic-main
+source venv/bin/activate
 python3 server.py
 
 ```
