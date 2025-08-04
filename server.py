@@ -14,7 +14,7 @@ try:
     from dotenv import load_dotenv
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
-    from flask_talisman import Talisman
+    from flask_wtf.csrf import CSRFProtect
     import magic
     import psutil
     import secrets
@@ -43,12 +43,8 @@ load_dotenv()
 
 #Flask setup + CSRF setup + Upload cap
 app = Flask(__name__)
-# Secure headers (prevents clickjacking, sniffing, XSS)
-Talisman(app, content_security_policy={
-    'default-src': "'self'"
-})
+csrf = CSRFProtect(app)
 app.config['PROPAGATE_EXCEPTIONS'] = False
-app.config['DEBUG'] = False
 app.config.update(
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
@@ -153,6 +149,8 @@ def allowed_filetype(file):
         'image/bmp',
         'application/x-msdownload',  # .exe
     ]
+    if mime not in ALLOWED_MIME_TYPES:
+        return f"Invalid MIME type {mime}. Only certain types are allowed."
 
 
 #Homepage
@@ -161,7 +159,6 @@ def allowed_filetype(file):
 def index():
     files = sorted(os.listdir(app.config['UPLOAD_FOLDER']))
     return render_template('index.html', files=files)
-
 
 #Upload
 @app.route('/upload', methods=['POST'])
@@ -175,7 +172,7 @@ def upload():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         if os.path.exists(filepath):
-            filename = f"{uuid.uuid4().hex}_{filename}"
+            filename = f"{os.path.splitext(secure_filename(filename))[0]}_{random.randint(100000, 999999)}{os.path.splitext(filename)[1]}"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return redirect(url_for('index'))
 
@@ -242,11 +239,32 @@ if __name__ == '__main__':
     app.run(debug=False)
 
 
-#TRIES to remove Ngrok headers
+#TRIES to remove Ngrok headers + Manual headers yay
 #This doesn't work if you type the domain out
 #This is a jank implemetation only to remove the headers from 
 #the device this script is running in
 @app.after_request
-def skip_ngrok_warning(response):
+def response_headers(response):
     response.headers["ngrok-skip-browser-warning"] = "true"
+    # Prevent clickjacking
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    
+    # Prevent content sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    
+    # Cross-site scripting (XSS) protection
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    
+    # Restrict content loading sources
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    
+    # Secure cookies and HTTP headers
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
+    
+    # Enable the browser to know that your app is to be trusted
+    response.headers['Feature-Policy'] = "vibrate 'none'; camera 'none'"
+    
+    # Disable the use of inline styles and scripts
+    response.headers['Content-Security-Policy'] = "script-src 'self'; style-src 'self'"
+    
     return response

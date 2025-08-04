@@ -6,6 +6,15 @@ A minimalist file server built in Python using Flask.
 
 ## 🔐 Features
 
+### General overview
+
+- **File Upload**: Supports large file uploads up to 2GB.
+- **File Management**: Upload, delete, and download files with secure access controls.
+- **Security**: CSRF protection, authentication, and MIME-type validation.
+- **Rate Limiting**: Prevents abuse with rate limits (64 requests per minute).
+- **Optional Public Access**: Public access via ngrok for temporary sharing.
+
+
 ### 🔐 Security Features
 
 #### ✅ CSRF Protection

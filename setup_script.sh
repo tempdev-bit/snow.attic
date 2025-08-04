@@ -85,6 +85,7 @@ if [[ "$start_now" =~ ^[Yy]$ ]]; then
 else
     echo "📦 Setup complete."
     echo "👉 To start later, run:"
+    echo "cd /snow.attic-main/"
     echo " source venv/bin/activate"
     echo " python3 server.py"
 fi
