@@ -87,7 +87,6 @@ input[type="submit"]:hover {
 
 <!-- Upload Form -->
 <form id="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-    {{ form.csrf_token() }}
     <input type="file" name="file" id="file-input">
     <input type="submit" value="Upload">
 </form>
@@ -103,7 +102,6 @@ input[type="submit"]:hover {
     <div class="file">
         <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
         <form action="{{ url_for('delete', filename=file) }}" method="POST">
-            {{ form.csrf_token() }}
             <input type="submit" value="Delete">
         </form>
     </div>

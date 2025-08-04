@@ -14,7 +14,6 @@ try:
     from dotenv import load_dotenv
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
-    from flask_wtf.csrf import CSRFProtect
     import magic
     import psutil
     import secrets
@@ -41,9 +40,8 @@ except ImportError:
 load_dotenv()
 
 
-#Flask setup + CSRF setup + Upload cap
+#Flask setup + Upload cap
 app = Flask(__name__)
-csrf = CSRFProtect(app)
 app.config['PROPAGATE_EXCEPTIONS'] = False
 app.config.update(
     SESSION_COOKIE_SECURE=True,
