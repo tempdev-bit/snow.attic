@@ -91,7 +91,7 @@
 
     <!-- File Upload Form -->
     <form id="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      {{ csrf_token() }}
       <input type="file" name="file" id="file-input" accept=".txt,.pdf,.png,.jpg,.jpeg,.gif,.zip,.7z,.rar,.mp3,.wav,.mp4,.mpv,.gba" required />
       <input type="submit" value="Upload" />
     </form>
@@ -109,7 +109,7 @@
           <div class="file">
             <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
             <form action="{{ url_for('delete', filename=file) }}" method="POST">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              {{ csrf_token() }}
               <input type="submit" value="Delete" />
             </form>
           </div>
