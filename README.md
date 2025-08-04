@@ -61,8 +61,7 @@ A minimalist file server built in Python using Flask.
   ```env
   SNOW_USERNAME=your_username
   SNOW_PASSWORD=your_password
-
-
+  ```
 ---
 
 ### 📁 File Upload & Management
