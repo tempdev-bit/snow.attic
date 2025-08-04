@@ -15,7 +15,6 @@ try:
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
     from flask_talisman import Talisman
-    from flask_wtf.csrf import CSRFProtect
     import magic
     import psutil
     import secrets
@@ -55,7 +54,6 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax'  # Or 'Strict'
 )
-csrf = CSRFProtect(app)
 app.secret_key = os.getenv("SECRET_KEY")
 limiter = Limiter(get_remote_address, app=app, default_limits=["1024/day", "64/minute"])
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 * 1024  # 2GB upload cap; temporary af
