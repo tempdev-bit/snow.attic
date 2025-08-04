@@ -111,6 +111,16 @@ A minimalist file server built in Python using Flask.
 
 ## ⚙️ Setup
 
+### Should Work On:
+
+    Ubuntu/Debian based distro (via apt)
+
+    Fedora/RHEL based distro (via dnf)
+
+    Arch Linux based distro (via pacman)
+
+### Setup Guide:
+
 Get NGROK token from https://dashboard.ngrok.com/signup
 
 ```bash
