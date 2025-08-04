@@ -44,12 +44,12 @@ load_dotenv()
 
 #Flask setup + CSRF setup + Upload cap
 app = Flask(__name__)
-app.config['PROPAGATE_EXCEPTIONS'] = False
-app.config['DEBUG'] = False
 # Secure headers (prevents clickjacking, sniffing, XSS)
 Talisman(app, content_security_policy={
     'default-src': "'self'"
 })
+app.config['PROPAGATE_EXCEPTIONS'] = False
+app.config['DEBUG'] = False
 app.config.update(
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
