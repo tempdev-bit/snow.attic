@@ -3,4 +3,8 @@ flask-httpauth
 python-dotenv
 pyngrok
 werkzeug
-
+flask-limiter
+flask-talisman
+flask-wtf
+python-magic
+psutil

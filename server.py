@@ -21,16 +21,16 @@ try:
     import secrets
 
 except ImportError as e:
-    print("Failed to import modules: Import error: {e}")
+    print(f"Failed to import modules: Import error: {e}")
     traceback.print_exc()
 else:
     print(f"Imported all modules succesfully!")
 
-
+ngrok_enabled = False
 #Try to import pyngrok for public access; PURELY OPTIONAL
 try:
     from pyngrok import ngrok
-    ngrok_enabled == True
+    ngrok_enabled = True
     print(f"Web access module imported!")
 except ImportError:
     ngrok = None
