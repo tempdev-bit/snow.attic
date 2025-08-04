@@ -1,160 +1,144 @@
 <!DOCTYPE html>
-<!--For the love of god and your sanity, don't try to even look at this code-->
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Snow Attic – Secure File Vault</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: #0a0f1a;
-      color: #b3cde0;
-      font-family: monospace, monospace;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      width: 100%;
-    }
-    .ascii {
-      white-space: pre;
-      text-align: center;
-      margin-bottom: 20px;
-      color: #8ab6d6;
-    }
-    h1 {
-      text-align: center;
-    }
-    .dropzone {
-      border: 2px dashed #3a6ea5;
-      background-color: #111a2b;
-      padding: 15px;
-      text-align: center;
-      margin: 20px 0;
-      color: #b3cde0;
-      cursor: pointer;
-      user-select: none;
-    }
-    .file {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #1f2b3a;
-    }
-    .file a {
-      color: #77aadd;
-      text-decoration: none;
-      word-break: break-all;
-    }
-    .file a:hover {
-      text-decoration: underline;
-    }
-    input[type="file"],
-    input[type="submit"] {
-      background: #1a2636;
-      color: #cde;
-      border: 1px solid #3a6ea5;
-      padding: 5px 10px;
-      margin-top: 5px;
-    }
-    input[type="submit"]:hover {
-      background: #2b3e55;
-      cursor: pointer;
-    }
-    form {
-      display: inline;
-    }
-  </style>
+<title>snow.attic</title>
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #0a0f1a; /* Dark navy blue */
+    color: #b3cde0; /* Soft light blue text */
+    font-family: monospace;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    width: 100%;
+}
+
+.ascii {
+    white-space: pre;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #8ab6d6;
+}
+
+.file {
+    margin: 10px 0;
+    border-bottom: 1px solid #1f2b3a;
+    padding-bottom: 5px;
+}
+
+.dropzone {
+    border: 2px dashed #3a6ea5;
+    background-color: #111a2b;
+    padding: 15px;
+    text-align: center;
+    margin: 20px 0;
+    color: #b3cde0;
+    cursor: pointer;
+}
+
+a {
+    color: #77aadd;
+    text-decoration: none;
+}
+
+form {
+    display: inline;
+}
+
+input[type="file"],
+input[type="submit"] {
+    background: #1a2636;
+    color: #cde;
+    border: 1px solid #3a6ea5;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+input[type="submit"]:hover {
+    background: #2b3e55;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
 
-    <div class="ascii" aria-hidden="true">
-       _____                                   _   _   _      
-      / ____|                             /\  | | | | (_)     
-     | (___  _ __   _____      __        /  \ | |_| |_ _  ___ 
-      \___ \| '_ \ / _ \ \ /\ / /       / /\ \| __| __| |/ __|
-      ____) | | | | (_) \ V  V /   _   / ____ \ |_| |_| | (__ 
-     |_____/|_| |_|\___/ \_/\_/   (_) /_/    \_\__|\__|_|\___|
+<div class="ascii">
+
+   _____                                   _   _   _      
+  / ____|                             /\  | | | | (_)     
+ | (___  _ __   _____      __        /  \ | |_| |_ _  ___ 
+  \___ \| '_ \ / _ \ \ /\ / /       / /\ \| __| __| |/ __|
+  ____) | | | | (_) \ V  V /   _   / ____ \ |_| |_| | (__ 
+ |_____/|_| |_|\___/ \_/\_/   (_) /_/    \_\__|\__|_|\___|
+</div>
+
+<h1>welcome to snow.attic ❄️</h1>
+
+<!-- Upload Form -->
+<form id="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file-input">
+    <input type="submit" value="Upload">
+</form>
+
+<!-- Drag and Drop -->
+<div class="dropzone" id="dropzone">
+    Drag & drop files here to upload
+</div>
+
+<h2>📂 Files:</h2>
+{% if files %}
+    {% for file in files %}
+    <div class="file">
+        <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
+        <form action="{{ url_for('delete', filename=file) }}" method="POST">
+            <input type="submit" value="Delete">
+        </form>
     </div>
+    {% endfor %}
+{% else %}
+    <p>No files uploaded yet.</p>
+{% endif %}
 
-    <h1>welcome to snow.attic ❄️</h1>
+</div>
 
-    <!-- File Upload Form -->
-    <form id="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" id="file-input" accept=".txt,.pdf,.png,.jpg,.jpeg,.gif,.zip,.7z,.rar,.mp3,.wav,.mp4,.mpv,.gba" required />
-      <input type="submit" value="Upload" />
-    </form>
+<script>
+// Drag-and-drop logic
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
+const uploadForm = document.getElementById('upload-form');
 
-    <!-- Drag and Drop Zone -->
-    <div class="dropzone" id="dropzone" role="button" tabindex="0">
-      Drag & drop files here to upload
-    </div>
+dropzone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropzone.style.background = '#1a2636';
+});
 
-    <!-- File List -->
-    <section aria-label="Uploaded files">
-      <h2>📂 Files ({{ files|length if files else 0 }}):</h2>
-      {% if files %}
-        {% for file in files %}
-          <div class="file">
-            <a href="{{ url_for('download', filename=file) }}">{{ file }}</a>
-            <form action="{{ url_for('delete', filename=file) }}" method="POST">
-              <input type="submit" value="Delete" />
-            </form>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p>No files uploaded yet.</p>
-      {% endif %}
-    </section>
+dropzone.addEventListener('dragleave', e => {
+    e.preventDefault();
+    dropzone.style.background = '#111a2b';
+});
 
-  </div>
+dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.style.background = '#111a2b';
 
-  <!-- Drag and Drop JavaScript -->
-  <script>
-    const dropzone = document.getElementById('dropzone');
-    const fileInput = document.getElementById('file-input');
-    const uploadForm = document.getElementById('upload-form');
+    // Assign dropped files to file input
+    fileInput.files = e.dataTransfer.files;
 
-    dropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.style.background = '#1a2636';
-    });
+    // Auto-submit the form
+    uploadForm.submit();
+});
+</script>
 
-    dropzone.addEventListener('dragleave', (e) => {
-      e.preventDefault();
-      dropzone.style.background = '#111a2b';
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.style.background = '#111a2b';
-      if (e.dataTransfer.files.length > 0) {
-        fileInput.files = e.dataTransfer.files;
-        uploadForm.submit();
-      }
-    });
-
-    dropzone.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        fileInput.click();
-      }
-    });
-
-    uploadForm.addEventListener('submit', () => {
-      dropzone.innerText = "Uploading...";
-      dropzone.style.background = "#2b3e55";
-    });
-  </script>
 </body>
 </html>
