@@ -89,15 +89,16 @@ ALLOWED_EXTENSIONS = {
 
 #Kills any stupid previous ngrok sessions
 def kill_existing_ngrok():
-    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+    for proc in psutil.process_iter(['name', 'cmdline']):
         try:
-            name = proc.info.get('name', '').lower()
-            cmdline = ' '.join(str(arg).lower() for arg in proc.info.get('cmdline', []))
-            if 'ngrok' in name or 'ngrok' in cmdline:
-                print(f"[Ngrok] Killing stale process (PID {proc.pid})")
+            cmdline_list = proc.info.get('cmdline') or []
+            cmdline = ' '.join(str(arg).lower() for arg in cmdline_list)
+            if 'ngrok' in proc.info.get('name', '').lower() or 'ngrok' in cmdline:
                 proc.kill()
+                print(f"Killed existing ngrok process: PID {proc.pid}")
         except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
+            pass
+
 
 if ngrok_enabled == True:
     kill_existing_ngrok()
