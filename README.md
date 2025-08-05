@@ -10,18 +10,15 @@ A minimalist file server built in Python using Flask.
 
 - **File Upload**: Supports large file uploads up to 2GB.
 - **File Management**: Upload, delete, and download files with secure access controls.
-- **Security**: CSRF protection, authentication, and MIME-type validation.
+- **Security**: Authentication, and MIME-type validation.
 - **Rate Limiting**: Prevents abuse with rate limits (64 requests per minute).
-- **Optional Public Access**: Public access via ngrok for temporary sharing.
+- **Optional Public Access**: Public access via ngrok for sharing.
 
 
 ### 🔐 Security Features
 
-#### ✅ CSRF Protection
-- Enabled using `flask-wtf`- `CSRFProtect`.
-
 #### ✅ Secure HTTP Headers
-- Enforced via `Flask-Talisman`.
+- Enforced via manual headers.
 - CSP (Content Security Policy) set to `'self'`.
 - Sets:
   - `X-Frame-Options: DENY`
@@ -36,9 +33,6 @@ A minimalist file server built in Python using Flask.
 #### ✅ Path Traversal Protection
 - File paths are sanitized using `secure_filename` and `os.path.abspath`.
 - Rejects requests where resolved path is outside the uploads directory.
-
-#### ✅ CSRF-Resistant Deletion
-- File deletions are Post-only and CSRF-protected.
 
 #### ✅ Upload Size Limit
 - Max upload limit: **2 GB** (`MAX_CONTENT_LENGTH`).
@@ -109,11 +103,6 @@ A minimalist file server built in Python using Flask.
 - Prints generated public URL on startup.
 - Sets custom response header to avoid ngrok browser warnings:
   - `ngrok-skip-browser-warning: true`
-
-#### ❌ Notes on Ngrok
-- Not required for local usage.
-- Adds convenience for temporary web access.
-- Ngrok usage can be disabled by omitting its import or token.
 
 ---
 
