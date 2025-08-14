@@ -244,6 +244,7 @@ if __name__ == '__main__':
 @app.after_request
 def response_headers(response):
     response.headers["ngrok-skip-browser-warning"] = "true"
+    
     # Prevent clickjacking
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     
